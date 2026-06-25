@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Navigator AI</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+    .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+    .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+    h1 { margin-top: 0; }
+    textarea { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; }
+    button { margin-top: 12px; padding: 10px 16px; border: none; border-radius: 8px; background: #2563eb; color: white; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    #response { margin-top: 16px; padding: 16px; background: #eff6ff; border-radius: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Health Navigator AI</h1>
+      <p>Try a sample prompt such as: “I have a fever and mild stomach pain while traveling.”</p>
+      <textarea id="message" placeholder="Describe your symptoms or ask for help..."></textarea>
+      <button onclick="sendMessage()">Send</button>
+      <div id="response">Response will appear here.</div>
+    </div>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById('message').value;
+      const responseBox = document.getElementById('response');
+      responseBox.textContent = 'Thinking...';
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        responseBox.textContent = data.reply || 'No reply returned.';
+      } catch (err) {
+        responseBox.textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
